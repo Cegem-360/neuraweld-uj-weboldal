@@ -142,8 +142,8 @@ body.light .logo img{filter:invert(1) brightness(.4) contrast(1.2)}
 /* ============== PRODUCTS ============== */
 .products{padding:24px 0 120px;border-bottom:1px solid var(--line)}
 .products-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
-.pcard{grid-column:span 2;position:relative;padding:32px;background:var(--bg-card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;min-height:340px;transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,background .3s;overflow:hidden;cursor:pointer}
-.pcard:nth-child(4),.pcard:nth-child(5){grid-column:span 3}
+.pcard{grid-column:span 2;position:relative;padding:32px;background:var(--bg-card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;min-height:360px;transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,background .3s;overflow:hidden;cursor:pointer}
+.pcard:nth-child(4){grid-column:2 / span 2}.pcard:nth-child(5){grid-column:4 / span 2}
 .pcard::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 80% 100% at 50% 0%,rgba(0,212,255,.08),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
 .pcard:hover{transform:translateY(-4px);border-color:var(--line-strong);background:#161b25}
 .pcard:hover::before{opacity:1}
@@ -224,7 +224,7 @@ body.light .logo img{filter:invert(1) brightness(.4) contrast(1.2)}
   .panel-inner{grid-template-columns:1fr;gap:32px}
   .panel-vis{aspect-ratio:16/10}
   .products-grid{grid-template-columns:repeat(2,1fr)}
-  .pcard,.pcard:nth-child(4),.pcard:nth-child(5){grid-column:span 1}
+  .pcard,.pcard:nth-child(4),.pcard:nth-child(5){grid-column:span 1!important}
   .why-row{grid-template-columns:1fr}
   .process-steps{grid-template-columns:1fr 1fr;gap:48px}
   .process-line-svg{display:none}
@@ -255,12 +255,12 @@ body.light .logo img{filter:invert(1) brightness(.4) contrast(1.2)}
     </a>
     <div class="nav-links">
       <a href="#termekek" class="active">Termékek</a>
-      <a href="#megoldas">Megoldások</a>
-      <a href="#folyamat">Folyamat</a>
-      <a href="#rolunk">Rólunk</a>
-      <a href="#kapcsolat">Kapcsolat</a>
+      <a href="#szolgaltatasok">Szolgáltatások</a>
+      <a href="rolunk.html">Rólunk</a>
+      <a href="blog.html">Blog</a>
+      <a href="kapcsolat.html">Kapcsolat</a>
     </div>
-    <a href="#kapcsolat" class="btn btn-primary">
+    <a href="idopontfoglalas.html" class="btn btn-primary">
       Időpontot foglalok
       <span aria-hidden="true">→</span>
     </a>
@@ -467,7 +467,7 @@ body.light .logo img{filter:invert(1) brightness(.4) contrast(1.2)}
 <!-- ============== PRODUCTS ============== -->
 <section class="products" id="termekek">
   <div class="container sh">
-    <div class="sh-eyebrow"><span class="mono" style="color:var(--accent)">Termékcsoportok / 05</span></div>
+    <div class="sh-eyebrow"><span class="mono" style="color:var(--accent)">Termékcsoportok / 03</span></div>
     <div class="sh-row">
       <h2>Megoldások az Ön folyamatára szabva.</h2>
       <p class="sh-blurb">Öt fő termékcsoportunk lefedi a teljes robothegesztési életciklust: integrációtól a szervizig. Válassza ki, ami az Ön gyártósorát viszi előre.</p>
@@ -481,9 +481,9 @@ body.light .logo img{filter:invert(1) brightness(.4) contrast(1.2)}
         <div class="pcard-icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 5V3M12 21v-2M5 12H3M21 12h-2M7.05 7.05L5.64 5.64M18.36 18.36l-1.41-1.41M7.05 16.95l-1.41 1.41M18.36 5.64l-1.41 1.41"/></svg>
         </div>
-        <h3>Robotintegráció</h3>
-        <p>ABB és FANUC 6-tengelyes robotok integrációja meglévő gyártósorokba. Munkaállomás-tervezés, kommunikáció, telepítés.</p>
-        <div class="pcard-tags"><span class="pcard-tag">ABB</span><span class="pcard-tag">FANUC</span><span class="pcard-tag">PLC</span></div>
+        <h3>Termékcsoport 1</h3>
+        <p>Rövid leírás a termékcsoport főbb jellemzőiről és alkalmazási területeiről. A végleges szöveget Szeréna küldi.</p>
+        <div class="pcard-tags"><span class="pcard-tag">PLACEHOLDER</span></div>
         <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
       </article>
 
@@ -492,9 +492,9 @@ body.light .logo img{filter:invert(1) brightness(.4) contrast(1.2)}
         <div class="pcard-icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         </div>
-        <h3>Robothegesztő cellák</h3>
-        <p>Kulcsrakész, biztonságkerítéssel ellátott hegesztőcellák egy- és kétállomásos kivitelben. Pozicionálóval, pajzzsal, elszívással.</p>
-        <div class="pcard-tags"><span class="pcard-tag">CE</span><span class="pcard-tag">SAFETY-PL D</span><span class="pcard-tag">2-ÁLLOMÁS</span></div>
+        <h3>Termékcsoport 2</h3>
+        <p>Rövid leírás a termékcsoport főbb jellemzőiről és alkalmazási területeiről. A végleges szöveget Szeréna küldi.</p>
+        <div class="pcard-tags"><span class="pcard-tag">PLACEHOLDER</span></div>
         <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
       </article>
 
@@ -503,34 +503,65 @@ body.light .logo img{filter:invert(1) brightness(.4) contrast(1.2)}
         <div class="pcard-icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12L9 8l4 4 6-6M19 6h-4M19 6v4"/><path d="M3 21h18"/></svg>
         </div>
-        <h3>Kemppi áramforrások</h3>
-        <p>Hivatalos magyarországi disztribúció. AX MIG sorozat varratkövetéssel (TAST), érintésérzékeléssel (TSI) és gázáramlás-méréssel.</p>
-        <div class="pcard-tags"><span class="pcard-tag">AX MIG</span><span class="pcard-tag">TAST</span><span class="pcard-tag">TSI</span></div>
+        <h3>Termékcsoport 3</h3>
+        <p>Rövid leírás a termékcsoport főbb jellemzőiről és alkalmazási területeiről. A végleges szöveget Szeréna küldi.</p>
+        <div class="pcard-tags"><span class="pcard-tag">PLACEHOLDER</span></div>
         <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
       </article>
 
       <article class="pcard" data-card>
         <div class="pcard-num">04 / 05</div>
         <div class="pcard-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/><path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         </div>
-        <h3>Szimulációs szolgáltatások</h3>
-        <p>Offline programozás és digitális iker a teljes robotcellához. Ütközés- és elérhetőség-analízis, ciklusidő-becslés, vizualizáció — még a vasak megrendelése előtt. Csökkenti a kockázatot, gyorsítja a beüzemelést, és tisztábbá teszi az árajánlatot.</p>
-        <div class="pcard-tags"><span class="pcard-tag">RobotStudio</span><span class="pcard-tag">Roboguide</span><span class="pcard-tag">Process Sim</span><span class="pcard-tag">Digital Twin</span></div>
+        <h3>Termékcsoport 4</h3>
+        <p>Rövid leírás a termékcsoport főbb jellemzőiről és alkalmazási területeiről. A végleges szöveget Szeréna küldi.</p>
+        <div class="pcard-tags"><span class="pcard-tag">PLACEHOLDER</span></div>
         <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
       </article>
 
       <article class="pcard" data-card>
         <div class="pcard-num">05 / 05</div>
         <div class="pcard-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7l-8-4-8 4 8 4 8-4z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg>
         </div>
+        <h3>Termékcsoport 5</h3>
+        <p>Rövid leírás a termékcsoport főbb jellemzőiről és alkalmazási területeiről. A végleges szöveget Szeréna küldi.</p>
+        <div class="pcard-tags"><span class="pcard-tag">PLACEHOLDER</span></div>
+        <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============== SZOLGÁLTATÁSOK ============== -->
+<section class="products" id="szolgaltatasok" style="background:#06080c">
+  <div class="container sh">
+    <div class="sh-eyebrow"><span class="mono" style="color:var(--accent)">Szolgáltatások / 02</span></div>
+    <div class="sh-row">
+      <h2>A termékek mellé teljes mérnöki támogatás.</h2>
+      <p class="sh-blurb">Szimuláció és karbantartás külön szolgáltatáscsomagként — akár Neuraweld-en kívüli rendszerekhez is.</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="products-grid" style="grid-template-columns:repeat(2,1fr)">
+      <article class="pcard" data-card style="grid-column:span 1;min-height:380px">
+        <div class="pcard-num">SVC / 01</div>
+        <div class="pcard-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/><path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/></svg></div>
+        <h3>Szimulációs szolgáltatások</h3>
+        <p>Offline programozás és digitális iker a teljes robotcellához. Ütközés- és elérhetőség-analízis, ciklusidő-becslés, vizualizáció — még a vasak megrendelése előtt. Csökkenti a kockázatot, gyorsítja a beüzemelést, és tisztábbá teszi az árajánlatot.</p>
+        <div class="pcard-tags"><span class="pcard-tag">RobotStudio</span><span class="pcard-tag">Roboguide</span><span class="pcard-tag">Process Sim</span><span class="pcard-tag">Digital Twin</span></div>
+        <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
+      </article>
+      <article class="pcard" data-card style="grid-column:span 1;min-height:380px">
+        <div class="pcard-num">SVC / 02</div>
+        <div class="pcard-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg></div>
         <h3>Karbantartás &amp; szerviz</h3>
         <p>Megelőző karbantartás éves szervizszerződéssel és 24/7-es távfelügyelettel. Pótalkatrész-raktár Budapesten, helyszíni reakcióidő 12 órán belül országosan. Üzemeltetők tréningje, programozási támogatás, távoli diagnosztika.</p>
         <div class="pcard-tags"><span class="pcard-tag">24/7</span><span class="pcard-tag">SLA</span><span class="pcard-tag">REMOTE</span><span class="pcard-tag">SPARES</span></div>
         <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
       </article>
-
     </div>
   </div>
 </section>
@@ -626,8 +657,8 @@ body.light .logo img{filter:invert(1) brightness(.4) contrast(1.2)}
     <h2>Kérjen online konzultációt — még ma.</h2>
     <p>30 perces, kötelezettségmentes beszélgetés egy mérnökkel. Mi felmérjük a folyamatot, Ön kap egy első koncepciót és egy reális idő- és költségkeretet.</p>
     <div class="cta-buttons">
-      <a href="#" class="btn btn-primary btn-lg">Időpontot foglalok <span aria-hidden="true">→</span></a>
-      <a href="#" class="btn btn-ghost btn-lg">Igényfelmérő kitöltése</a>
+      <a href="idopontfoglalas.html" class="btn btn-primary btn-lg">Időpontot foglalok <span aria-hidden="true">→</span></a>
+      <a href="idopontfoglalas.html#igenyfelmero" class="btn btn-ghost btn-lg">Igényfelmérő kitöltése</a>
     </div>
   </div>
 </section>

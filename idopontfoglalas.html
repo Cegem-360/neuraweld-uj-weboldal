@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="hu"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Időpontfoglalás — Neuraweld</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="_subpage-shell.css"/>
+<style>
+.cal-wrap{display:grid;grid-template-columns:1fr;gap:24px;margin-top:32px}
+.cal-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.cal-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600}
+.cal-nav{display:flex;gap:8px;align-items:center}
+.cal-nav button{width:36px;height:36px;border:1px solid var(--line-strong);border-radius:8px;color:var(--text);transition:background .2s,border-color .2s;display:flex;align-items:center;justify-content:center}
+.cal-nav button:hover{background:var(--bg-card);border-color:var(--text)}
+.cal-grid{display:grid;grid-template-columns:80px repeat(5,1fr);background:var(--bg-card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.cal-grid .h{padding:14px 8px;text-align:center;border-bottom:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--text-faint);text-transform:uppercase;background:#0a0c10}
+.cal-grid .h .day{display:block;font-family:'Space Grotesk',sans-serif;font-size:22px;color:var(--text);letter-spacing:-.02em;margin-top:2px;text-transform:none;font-weight:500}
+.cal-grid .h.today .day{color:var(--accent)}
+.cal-grid .time-col{display:flex;align-items:center;justify-content:flex-end;padding:6px 12px;border-right:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-faint);min-height:34px}
+.cal-grid .slot{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px;cursor:pointer;display:flex;align-items:stretch;min-height:34px;background:var(--bg-card);transition:background .15s}
+.cal-grid .slot:last-child{border-right:0}
+.slot-fill{flex:1;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:500}
+.slot.free .slot-fill{background:rgba(0,212,255,.07);color:rgba(0,212,255,.5);border:1px dashed rgba(0,212,255,.2)}
+.slot.free:hover .slot-fill{background:rgba(0,212,255,.15);color:var(--accent);border-style:solid}
+.slot.busy{cursor:not-allowed}
+.slot.busy .slot-fill{background:rgba(255,255,255,.04);color:var(--text-faint);border:1px solid var(--line);text-decoration:line-through;opacity:.7}
+.slot.selected .slot-fill{background:var(--accent);color:#06121a;border:1px solid var(--accent);font-weight:600;box-shadow:0 4px 12px rgba(0,212,255,.3)}
+.legend{display:flex;gap:16px;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--text-muted);flex-wrap:wrap}
+.legend .lg{display:flex;align-items:center;gap:8px}
+.legend .lg-sw{width:14px;height:14px;border-radius:3px}
+.legend .free .lg-sw{background:rgba(0,212,255,.15);border:1px solid var(--accent)}
+.legend .busy .lg-sw{background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.legend .sel .lg-sw{background:var(--accent)}
+
+.form-wrap{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:32px}
+.form-box{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;padding:32px}
+.field{margin-bottom:18px}
+.field label{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);margin-bottom:8px}
+.field label .req{color:var(--accent)}
+.field input,.field textarea,.field select{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--line-strong);border-radius:8px;color:var(--text);font:inherit;font-size:15px;transition:border-color .2s,background .2s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);background:#0a1216}
+.field textarea{min-height:100px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 14px;border:1px solid var(--line-strong);border-radius:100px;background:var(--bg);font-size:13.5px;color:var(--text-muted);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.chip:hover{border-color:var(--text-muted);color:var(--text)}
+.chip.active{background:var(--accent);color:#06121a;border-color:var(--accent);font-weight:500}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.check{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line-strong);border-radius:8px;background:var(--bg);font-size:14px;cursor:pointer;transition:all .15s}
+.check:hover{border-color:var(--text-muted)}
+.check input{width:auto;accent-color:var(--accent)}
+.check.active{border-color:var(--accent);background:rgba(0,212,255,.06)}
+.summary{padding:20px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:10px;font-size:14px;color:var(--text);margin-bottom:18px;display:none}
+.summary.show{display:block}
+.summary .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.summary .val{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:500}
+@media (max-width:980px){.form-wrap{grid-template-columns:1fr}.cal-grid{grid-template-columns:60px repeat(5,1fr);font-size:10px}.row2,.checks{grid-template-columns:1fr}}
+</style>
+</head><body>
+<nav class="nav"><div class="nav-inner">
+<a class="logo" href="Neuraweld Főoldal.html"><img src="assets/neuraweld-logo.png" alt="Neuraweld"/></a>
+<div class="nav-links">
+<a href="Neuraweld Főoldal.html#termekek">Termékek</a>
+<a href="Neuraweld Főoldal.html#szolgaltatasok">Szolgáltatások</a>
+<a href="rolunk.html">Rólunk</a>
+<a href="blog.html">Blog</a>
+<a href="kapcsolat.html">Kapcsolat</a>
+</div>
+<a href="idopontfoglalas.html" class="btn btn-primary active">Időpontot foglalok</a>
+</div></nav>
+
+<section class="page-hero"><div class="container">
+<div class="page-eyebrow"><span class="eyebrow">Időpontfoglalás · Online konzultáció</span></div>
+<h1>Foglaljon 30 perces konzultációt egy mérnökünkkel.</h1>
+<p>Heti naptár, élő szabad / foglalt nézet. Munkanapokon 8:00 — 16:00 között, 30 perces idősávokban. Visszaigazoló e-mail automatikusan, megerősítés 24 órán belül.</p>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="eyebrow">// 1. Lépés — Válassza ki az időpontot</div>
+<div class="cal-wrap">
+<div class="cal-head">
+<div class="cal-title" id="weekTitle">Hét betöltése…</div>
+<div class="cal-nav">
+<button id="prevWeek" aria-label="Előző hét">←</button>
+<button id="todayBtn" style="width:auto;padding:0 14px;font-size:13px">Mai hét</button>
+<button id="nextWeek" aria-label="Következő hét">→</button>
+</div>
+</div>
+<div class="cal-grid" id="calGrid"></div>
+<div class="legend">
+<span class="lg free"><span class="lg-sw"></span>Szabad</span>
+<span class="lg busy"><span class="lg-sw"></span>Foglalt</span>
+<span class="lg sel"><span class="lg-sw"></span>Kiválasztott</span>
+</div>
+</div>
+</div></section>
+
+<section class="section" id="igenyfelmero"><div class="container">
+<div class="eyebrow">// 2. Lépés — Igényfelmérő</div>
+<h2 style="margin-top:14px;max-width:24ch">Pár kérdés, hogy felkészülten érkezzünk.</h2>
+<p style="color:var(--text-muted);max-width:54ch;margin-top:14px">Egy rövid kérdéssor a projektjéről — így a 30 perces beszélgetés alatt rögtön a lényegre térhetünk.</p>
+
+<form class="form-wrap" onsubmit="event.preventDefault();handleSubmit()">
+<div class="form-box">
+<div class="summary" id="summary">
+<div class="lbl">Kiválasztott időpont</div>
+<div class="val" id="summaryVal">—</div>
+</div>
+
+<div class="field"><label>Érintett iparág <span class="req">*</span></label>
+<div class="chips" id="industryChips">
+<span class="chip" data-v="auto">Autóipar</span>
+<span class="chip" data-v="agri">Mezőgazdasági gépgyártás</span>
+<span class="chip" data-v="cons">Építőipar</span>
+<span class="chip" data-v="energy">Energetika</span>
+<span class="chip" data-v="machinery">Általános gépgyártás</span>
+<span class="chip" data-v="rail">Vasúti járműipar</span>
+<span class="chip" data-v="aero">Légi- és űripar</span>
+<span class="chip" data-v="other">Egyéb</span>
+</div>
+</div>
+
+<div class="field"><label>Elvégzendő feladattípus <span class="req">*</span></label>
+<div class="checks" id="taskChecks">
+<label class="check"><input type="checkbox" value="weld"/> Hegesztés</label>
+<label class="check"><input type="checkbox" value="bolt"/> Csavarozás</label>
+<label class="check"><input type="checkbox" value="assy"/> Összeszerelés</label>
+<label class="check"><input type="checkbox" value="qa"/> Ellenőrzés</label>
+<label class="check"><input type="checkbox" value="other"/> Egyéb</label>
+</div>
+</div>
+
+<div class="field"><label>Jelenlegi robotpark márkái</label>
+<input type="text" placeholder="Pl. ABB, FANUC, KUKA — vagy üresen, ha még nincs"/>
+</div>
+
+<div class="field"><label>Tervezett bevezetési időkeret <span class="req">*</span></label>
+<select required>
+<option value="">— válasszon —</option>
+<option>1–3 hónap</option>
+<option>3–6 hónap</option>
+<option>6–12 hónap</option>
+<option>1 év vagy több</option>
+</select>
+</div>
+
+<div class="field"><label>Rövid leírás az igényről</label>
+<textarea placeholder="Mit szeretne automatizálni? Milyen darabszám, anyagvastagság, ütem?"></textarea>
+</div>
+</div>
+
+<div class="form-box">
+<div class="field"><label>Név <span class="req">*</span></label><input type="text" required/></div>
+<div class="field"><label>Cégnév <span class="req">*</span></label><input type="text" required/></div>
+<div class="row2">
+<div class="field"><label>E-mail <span class="req">*</span></label><input type="email" required/></div>
+<div class="field"><label>Telefonszám <span class="req">*</span></label><input type="tel" required/></div>
+</div>
+<div class="field" style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--text-muted);line-height:1.5">
+<input type="checkbox" required style="width:auto;margin-top:3px;accent-color:var(--accent)"/>
+<span>Elfogadom a <a href="#" style="color:var(--accent)">adatkezelési tájékoztatót</a> és hozzájárulok adataim kapcsolatfelvétel céljából történő kezeléséhez.</span>
+</div>
+<button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:8px">Időpont megerősítése <span>→</span></button>
+<p style="font-size:12.5px;color:var(--text-faint);margin:14px 0 0;line-height:1.5">A foglalás után automatikus visszaigazoló e-mailt küldünk. A megerősítés 24 munkaórán belül érkezik. 24 órával az időpont előtt emlékeztető e-mailt is küldünk.</p>
+</div>
+</form>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-bot"><span>© 2026 REVOMATIC ZRT. — NEURAWELD</span></div></div></footer>
+
+<script>
+/* Calendar */
+const grid = document.getElementById('calGrid');
+const weekTitle = document.getElementById('weekTitle');
+const summary = document.getElementById('summary');
+const summaryVal = document.getElementById('summaryVal');
+const DAYS = ['H', 'K', 'Sze', 'Cs', 'P'];
+let weekOffset = 0;
+let selected = null;
+
+// Deterministic pseudo-busy slots based on date — looks realistic but stable
+function slotBusy(date, hour, min){
+  const k = date.getFullYear()*10000 + (date.getMonth()+1)*100 + date.getDate() + hour*60 + min;
+  const r = (Math.sin(k * 12.9898) * 43758.5453) % 1;
+  return Math.abs(r) < 0.42; // ~42% busy
+}
+
+function getMonday(d){
+  const x = new Date(d); const day = x.getDay() || 7;
+  if(day !== 1) x.setDate(x.getDate() - day + 1);
+  x.setHours(0,0,0,0); return x;
+}
+
+function fmtDate(d){
+  return d.toLocaleDateString('hu-HU', {year:'numeric', month:'long', day:'numeric'});
+}
+
+function buildWeek(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const monday = getMonday(today);
+  monday.setDate(monday.getDate() + weekOffset*7);
+  const friday = new Date(monday); friday.setDate(friday.getDate()+4);
+  weekTitle.textContent = `${monday.toLocaleDateString('hu-HU',{month:'short',day:'numeric'})} — ${friday.toLocaleDateString('hu-HU',{month:'short',day:'numeric',year:'numeric'})}`;
+
+  let html = '<div class="h" style="background:#0a0c10"></div>';
+  for(let i=0;i<5;i++){
+    const d = new Date(monday); d.setDate(d.getDate()+i);
+    const isToday = d.getTime() === today.getTime();
+    html += `<div class="h${isToday?' today':''}">${DAYS[i]}<span class="day">${d.getDate()}</span></div>`;
+  }
+
+  // Hours 8:00 — 16:00, 30-min slots = 16 rows
+  for(let h=8; h<16; h++){
+    for(let m=0; m<60; m+=30){
+      const tLabel = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+      html += `<div class="time-col">${tLabel}</div>`;
+      for(let i=0;i<5;i++){
+        const d = new Date(monday); d.setDate(d.getDate()+i);
+        const past = d < today;
+        const busy = past || slotBusy(d, h, m);
+        const id = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}-${h}-${m}`;
+        html += `<div class="slot ${busy?'busy':'free'}" data-id="${id}" data-label="${fmtDate(d)} · ${tLabel}">
+          <div class="slot-fill">${busy?'—':tLabel}</div>
+        </div>`;
+      }
+    }
+  }
+  grid.innerHTML = html;
+  if(selected){
+    const cell = grid.querySelector(`[data-id="${selected}"]`);
+    if(cell && cell.classList.contains('free')) cell.classList.add('selected');
+  }
+}
+
+grid.addEventListener('click', (e) => {
+  const slot = e.target.closest('.slot.free'); if(!slot) return;
+  grid.querySelectorAll('.slot.selected').forEach(s => s.classList.remove('selected'));
+  slot.classList.add('selected');
+  selected = slot.dataset.id;
+  summary.classList.add('show');
+  summaryVal.textContent = slot.dataset.label;
+  document.getElementById('igenyfelmero').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+document.getElementById('prevWeek').addEventListener('click', () => { weekOffset--; buildWeek(); });
+document.getElementById('nextWeek').addEventListener('click', () => { weekOffset++; buildWeek(); });
+document.getElementById('todayBtn').addEventListener('click', () => { weekOffset = 0; buildWeek(); });
+
+/* Chips */
+document.getElementById('industryChips').addEventListener('click', (e) => {
+  const c = e.target.closest('.chip'); if(!c) return;
+  document.querySelectorAll('#industryChips .chip').forEach(x => x.classList.remove('active'));
+  c.classList.add('active');
+});
+/* Check active state */
+document.querySelectorAll('.check').forEach(lbl => {
+  const cb = lbl.querySelector('input');
+  cb.addEventListener('change', () => lbl.classList.toggle('active', cb.checked));
+});
+
+function handleSubmit(){
+  if(!selected){ alert('Kérjük válasszon először időpontot a naptárból.'); return; }
+  alert('Köszönjük! A foglalás megérkezett, e-mailben visszaigazoljuk.');
+}
+
+buildWeek();
+</script>
+</body></html>

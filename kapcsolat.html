@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="hu"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Kapcsolat — Neuraweld</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="_subpage-shell.css"/>
+<style>
+.contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:64px;align-items:start}
+.cinfo{display:flex;flex-direction:column;gap:32px}
+.cinfo .block h3{font-size:14px;font-family:'JetBrains Mono',monospace;letter-spacing:.15em;color:var(--text-faint);text-transform:uppercase;margin-bottom:10px;font-weight:500}
+.cinfo .block p,.cinfo .block a{font-size:18px;color:var(--text);margin:0;line-height:1.5}
+.cinfo .block a{display:block;color:var(--accent)}
+.map{margin-top:24px;aspect-ratio:5/3;background:linear-gradient(135deg,#0c1119,#161b25);border:1px solid var(--line);border-radius:14px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.map::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000,transparent)}
+.map-pin{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px}
+.map-pin .dot{width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 6px rgba(0,212,255,.2),0 0 0 14px rgba(0,212,255,.08)}
+.map-pin .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--text)}
+.cform{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;padding:40px}
+.field{margin-bottom:18px}
+.field label{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);margin-bottom:8px}
+.field input,.field textarea,.field select{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--line-strong);border-radius:8px;color:var(--text);font:inherit;font-size:15px;transition:border-color .2s,background .2s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);background:#0a1216}
+.field textarea{min-height:120px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:880px){.contact-grid{grid-template-columns:1fr;gap:32px}.row2{grid-template-columns:1fr}}
+</style>
+</head><body>
+<nav class="nav"><div class="nav-inner">
+<a class="logo" href="Neuraweld Főoldal.html"><img src="assets/neuraweld-logo.png" alt="Neuraweld"/></a>
+<div class="nav-links">
+<a href="Neuraweld Főoldal.html#termekek">Termékek</a>
+<a href="Neuraweld Főoldal.html#szolgaltatasok">Szolgáltatások</a>
+<a href="rolunk.html">Rólunk</a>
+<a href="blog.html">Blog</a>
+<a href="kapcsolat.html" class="active">Kapcsolat</a>
+</div>
+<a href="idopontfoglalas.html" class="btn btn-primary">Időpontot foglalok <span>→</span></a>
+</div></nav>
+
+<section class="page-hero"><div class="container">
+<div class="page-eyebrow"><span class="eyebrow">Kapcsolat</span></div>
+<h1>Beszéljünk a projektjéről.</h1>
+<p>Üzenet, e-mail vagy telefon — ahogy önnek kényelmes. 24 órán belül válaszolunk munkanapokon.</p>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="contact-grid">
+<div class="cinfo">
+<div class="block"><h3>Cím</h3><p>Revomatic Zrt.<br/>Cseresznye utca 37.<br/>1037 Budapest</p></div>
+<div class="block"><h3>Csarnok</h3><p>Kinizsi utca 49.<br/>5420 Túrkeve</p></div>
+<div class="block"><h3>E-mail</h3><a href="mailto:hello@neuraweld.hu">hello@neuraweld.hu</a><a href="mailto:info@revomatic.hu">info@revomatic.hu</a></div>
+<div class="block"><h3>Telefon</h3><a href="tel:+3612000000">+36 1 200 0000</a></div>
+<div class="map"><div class="map-pin"><span class="dot"></span><span class="lbl">BUDAPEST · 1037</span></div></div>
+</div>
+
+<form class="cform" onsubmit="event.preventDefault();alert('Köszönjük! Megkaptuk az üzenetet.')">
+<h2 style="font-size:24px;margin-bottom:8px">Írjon nekünk</h2>
+<p style="color:var(--text-muted);font-size:14px;margin:0 0 24px">Általános megkeresés. Konkrét projekthez használja az időpontfoglalót.</p>
+<div class="row2">
+<div class="field"><label>Név *</label><input type="text" required/></div>
+<div class="field"><label>Cégnév</label><input type="text"/></div>
+</div>
+<div class="row2">
+<div class="field"><label>E-mail *</label><input type="email" required/></div>
+<div class="field"><label>Telefon</label><input type="tel"/></div>
+</div>
+<div class="field"><label>Tárgy</label><input type="text"/></div>
+<div class="field"><label>Üzenet *</label><textarea required></textarea></div>
+<div class="field" style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted)"><input type="checkbox" required style="width:auto"/> Elfogadom az adatkezelési tájékoztatót</div>
+<button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">Üzenet küldése <span>→</span></button>
+</form>
+</div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-bot"><span>© 2026 REVOMATIC ZRT. — NEURAWELD</span></div></div></footer>
+</body></html>

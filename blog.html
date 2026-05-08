@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="hu"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Blog — Neuraweld</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="_subpage-shell.css"/>
+<style>
+.posts{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.post{background:var(--bg-card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s,border-color .3s;cursor:pointer}
+.post:hover{transform:translateY(-4px);border-color:var(--line-strong)}
+.post-cover{aspect-ratio:16/10;background:linear-gradient(135deg,#0c1119,#161b25);position:relative;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em}
+.post-cover.c1{background:linear-gradient(135deg,#0a1d2c,#0c1119)}
+.post-cover.c2{background:linear-gradient(135deg,#1a1410,#0c1119)}
+.post-cover.c3{background:linear-gradient(135deg,#0d1d18,#0c1119)}
+.post-body{padding:24px;display:flex;flex-direction:column;flex:1}
+.post .meta{display:flex;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--text-faint);margin-bottom:14px}
+.post .meta .cat{color:var(--accent)}
+.post h3{font-size:20px;margin-bottom:10px;letter-spacing:-.02em}
+.post p{color:var(--text-muted);font-size:14.5px;margin:0 0 18px;flex:1}
+.post .read{font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--text);font-weight:500}
+.feat{margin-top:32px;display:grid;grid-template-columns:1.2fr 1fr;background:var(--bg-card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.feat-cover{background:linear-gradient(135deg,#0a1d2c 0%,#1a2c3d 50%,#0c1119 100%);padding:48px;display:flex;align-items:flex-end;min-height:340px;position:relative}
+.feat-cover::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 30% 30%,rgba(0,212,255,.15),transparent 70%)}
+.feat-cover .label{position:relative;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--accent)}
+.feat-body{padding:48px;display:flex;flex-direction:column;justify-content:center;gap:16px}
+.feat-body .meta{display:flex;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--text-faint)}
+.feat-body .meta .cat{color:var(--accent)}
+.feat-body p{color:var(--text-muted);font-size:16px;margin:0}
+@media (max-width:880px){.posts{grid-template-columns:1fr}.feat{grid-template-columns:1fr}}
+</style>
+</head><body>
+<nav class="nav"><div class="nav-inner">
+<a class="logo" href="Neuraweld Főoldal.html"><img src="assets/neuraweld-logo.png" alt="Neuraweld"/></a>
+<div class="nav-links">
+<a href="Neuraweld Főoldal.html#termekek">Termékek</a>
+<a href="Neuraweld Főoldal.html#szolgaltatasok">Szolgáltatások</a>
+<a href="rolunk.html">Rólunk</a>
+<a href="blog.html" class="active">Blog</a>
+<a href="kapcsolat.html">Kapcsolat</a>
+</div>
+<a href="idopontfoglalas.html" class="btn btn-primary">Időpontot foglalok <span>→</span></a>
+</div></nav>
+
+<section class="page-hero"><div class="container">
+<div class="page-eyebrow"><span class="eyebrow">Blog · Hírek</span></div>
+<h1>Iparági trendek, esettanulmányok, technikai bejegyzések.</h1>
+<p>Mit látunk a robothegesztés és az ipari automatizálás területén? Mérnöki blog mérnököknek és döntéshozóknak.</p>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="eyebrow">// Kiemelt</div>
+<div class="feat">
+<div class="feat-cover"><span class="label">FEATURED · ESETTANULMÁNY</span></div>
+<div class="feat-body">
+<div class="meta"><span class="cat">ESETTANULMÁNY</span><span>2026.03.04</span><span>· 8 perc olvasás</span></div>
+<h2 style="font-size:32px;margin-bottom:0">Hogyan csökkentettünk 38%-ot a ciklusidőn egy autóipari beszállítónál?</h2>
+<p>Egy 2-állomásos Neuraweld cella + Kemppi AX integrációja 6 hónap alatt — a tervezéstől a szériagyártásig.</p>
+<a href="#" class="btn btn-ghost" style="align-self:flex-start;margin-top:8px">Olvasom <span>→</span></a>
+</div>
+</div>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="eyebrow">// Legfrissebb</div>
+<div class="posts">
+<article class="post"><div class="post-cover c1">CAD · DESIGN</div><div class="post-body">
+<div class="meta"><span class="cat">TERVEZÉS</span><span>2026.02.18</span></div>
+<h3>3D cellaterv 5 munkanap alatt — hogyan?</h3>
+<p>Mérnökeink workflow-ja, eszközei és a tipikus buktatók a koncepciótervezés szakaszában.</p>
+<span class="read">Tovább →</span></div></article>
+
+<article class="post"><div class="post-cover c2">KEMPPI AX</div><div class="post-body">
+<div class="meta"><span class="cat">TECHNIKAI</span><span>2026.02.02</span></div>
+<h3>TAST varratkövetés — mikor éri meg?</h3>
+<p>A Kemppi AX MIG sorozat varratkövető funkciójának ROI-ja vékonylemezes és vastag varratos alkalmazásokban.</p>
+<span class="read">Tovább →</span></div></article>
+
+<article class="post"><div class="post-cover c3">PÁLYÁZAT</div><div class="post-body">
+<div class="meta"><span class="cat">PÁLYÁZAT</span><span>2026.01.21</span></div>
+<h3>GINOP Plusz 2026: mit kell tudni a robotizációs pályázatról?</h3>
+<p>Feltételek, határidők, és hogyan illeszkedik a Neuraweld dokumentációja a pályázati elvárásokhoz.</p>
+<span class="read">Tovább →</span></div></article>
+
+<article class="post"><div class="post-cover c1">SCADA · IPAR 4.0</div><div class="post-body">
+<div class="meta"><span class="cat">IPAR 4.0</span><span>2026.01.10</span></div>
+<h3>OPC UA vs. MQTT — melyik protokoll mikor jó?</h3>
+<p>Gyártósori adatkapuk tervezésekor a két leggyakoribb választás összehasonlítása valós példákon.</p>
+<span class="read">Tovább →</span></div></article>
+
+<article class="post"><div class="post-cover c2">SZIMULÁCIÓ</div><div class="post-body">
+<div class="meta"><span class="cat">SZIMULÁCIÓ</span><span>2025.12.18</span></div>
+<h3>RobotStudio offline programozás — első lépések</h3>
+<p>Hogyan írhatja meg a beüzemelő mérnök a robotprogram 80%-át, mielőtt a robot egyáltalán a helyszínre érkezik?</p>
+<span class="read">Tovább →</span></div></article>
+
+<article class="post"><div class="post-cover c3">SZERVIZ</div><div class="post-body">
+<div class="meta"><span class="cat">KARBANTARTÁS</span><span>2025.12.02</span></div>
+<h3>5 jel, hogy ideje preventív karbantartásra vinni a robotcellát</h3>
+<p>Megnövekedett ciklusidő, tájolási hiba, hegesztési porozitás — mikor érdemes szervizt kérni?</p>
+<span class="read">Tovább →</span></div></article>
+</div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-bot"><span>© 2026 REVOMATIC ZRT. — NEURAWELD</span></div></div></footer>
+</body></html>

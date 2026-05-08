@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="hu"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Rólunk — Neuraweld</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="_subpage-shell.css"/>
+<style>
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.tcard{background:var(--bg-card);border:1px solid var(--line);border-radius:14px;padding:32px;transition:border-color .3s}
+.tcard:hover{border-color:var(--line-strong)}
+.tphoto{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));margin-bottom:18px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;color:#06121a}
+.tcard h3{margin-bottom:4px;font-size:20px}
+.tcard .role{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--text-muted);margin-bottom:14px}
+.tcard p{margin:0;color:var(--text-muted);font-size:14.5px}
+.values{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:48px}
+.values > div{background:var(--bg);padding:40px;display:flex;flex-direction:column;gap:14px}
+.values .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.15em}
+.story-row{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:start}
+.story-row p{font-size:17px;color:var(--text-muted);margin:0 0 18px;max-width:60ch}
+@media (max-width:880px){.team{grid-template-columns:1fr}.values{grid-template-columns:1fr}.story-row{grid-template-columns:1fr;gap:32px}}
+</style>
+</head><body>
+<nav class="nav"><div class="nav-inner">
+<a class="logo" href="Neuraweld Főoldal.html"><img src="assets/neuraweld-logo.png" alt="Neuraweld"/></a>
+<div class="nav-links">
+<a href="Neuraweld Főoldal.html#termekek">Termékek</a>
+<a href="Neuraweld Főoldal.html#szolgaltatasok">Szolgáltatások</a>
+<a href="rolunk.html" class="active">Rólunk</a>
+<a href="blog.html">Blog</a>
+<a href="kapcsolat.html">Kapcsolat</a>
+</div>
+<a href="idopontfoglalas.html" class="btn btn-primary">Időpontot foglalok <span>→</span></a>
+</div></nav>
+
+<section class="page-hero"><div class="container">
+<div class="page-eyebrow"><span class="eyebrow">Rólunk</span></div>
+<h1>Mérnöki tudás. Magyar minőség. Egy partnerrel.</h1>
+<p>A Neuraweld a Revomatic Zrt. robothegesztési és ipari automatizálási termékcsaládja. Nyolc éves tapasztalattal, magyar mérnökökkel, a Túrkevén és Budapesten dolgozó csapattal építjük az ipar 4.0 megoldásait.</p>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="story-row">
+<div><div class="eyebrow">// Történet</div><h2 style="margin-top:14px">2018 óta a magyar ipar mellett.</h2></div>
+<div>
+<p>A Revomatic Zrt. 2018-ban alakult, három mérnök vízióját megvalósítva: legyen Magyarországon olyan robotintegrátor, amely tervezéstől a 10 éves szervizig egy partnerként áll a megrendelő mellett — alvállalkozói lánc nélkül.</p>
+<p>2024-re a cég túrkevei csarnokában évente 20+ robotcellát gyártunk és integrálunk. 2026-ban a Neuraweld brand alatt egységesítjük a termékcsaládot, hogy az ügyfeleink egy helyen találják meg a teljes ökoszisztémát.</p>
+<p>Hivatalos Kemppi-disztribútorként a finn áramforrások varratkövető (TAST) és érintésérzékelő (TSI) technológiáját közvetlenül integráljuk az ABB és FANUC robotokba.</p>
+</div>
+</div>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="eyebrow">// Értékek</div>
+<h2 style="margin-top:14px;max-width:18ch">Amitől más vagyunk.</h2>
+<div class="values">
+<div><span class="num">01</span><h3>Mérnöki precizitás</h3><p style="color:var(--text-muted);font-size:15px;margin:0">CAD-tól PLC-ig, tervezőasztaltól csarnokig — minden lépés saját mérnök kezén.</p></div>
+<div><span class="num">02</span><h3>Magyar gyártás</h3><p style="color:var(--text-muted);font-size:15px;margin:0">Túrkevei csarnok, budapesti iroda. Nincs időeltolódás, nincs nyelvi határ.</p></div>
+<div><span class="num">03</span><h3>Teljes életciklus</h3><p style="color:var(--text-muted);font-size:15px;margin:0">Igényfelméréstől a 10 éves karbantartási szerződésig egy felelős partner.</p></div>
+<div><span class="num">04</span><h3>Pályázat-kompatibilis</h3><p style="color:var(--text-muted);font-size:15px;margin:0">GINOP Plusz / DIMOP Plusz feltételekre szabott teljesítményigazolás.</p></div>
+</div>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="eyebrow">// Csapat</div>
+<h2 style="margin-top:14px;max-width:18ch">Akik mögötte állnak.</h2>
+<div class="team">
+<div class="tcard"><div class="tphoto">SS</div><h3>Sarány Szeréna</h3><div class="role">ÜGYVEZETŐ · REVOMATIC</div><p>Stratégia, ügyféloldal, pályázati koordináció. 12 év iparági tapasztalat.</p></div>
+<div class="tcard"><div class="tphoto">VL</div><h3>Vezető mérnök</h3><div class="role">MŰSZAKI IGAZGATÓ</div><p>Robotintegráció, cellatervezés, szimuláció. ABB-certifikált.</p></div>
+<div class="tcard"><div class="tphoto">PM</div><h3>Projektmenedzser</h3><div class="role">DELIVERY LEAD</div><p>Mérföldkövek, kivitelezés-felügyelet, ügyfélkommunikáció.</p></div>
+</div>
+</div></section>
+
+<footer class="footer"><div class="container"><div class="footer-bot"><span>© 2026 REVOMATIC ZRT. — NEURAWELD</span></div></div></footer>
+</body></html>

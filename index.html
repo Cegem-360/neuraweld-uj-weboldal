@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Neuraweld — Intelligens robothegesztési megoldások</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --bg:#08090c;
+  --bg-elev:#0f1117;
+  --bg-card:#13161e;
+  --line:rgba(255,255,255,.07);
+  --line-strong:rgba(255,255,255,.14);
+  --text:#e8ecf2;
+  --text-muted:#7a8294;
+  --text-faint:#4a5163;
+  --accent:#00d4ff;
+  --accent-2:#0090ff;
+  --accent-glow:0 0 60px rgba(0,212,255,.35);
+  --warn:#ff7a3d;
+  --maxw:1320px;
+  --pad:clamp(20px,4vw,56px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+body{font-feature-settings:"ss01","cv11"}
+img,svg,video{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:-.02em;line-height:1.05;margin:0}
+h1{font-size:clamp(48px,8.5vw,128px);letter-spacing:-.04em;font-weight:600}
+h2{font-size:clamp(34px,5vw,72px);letter-spacing:-.03em}
+h3{font-size:clamp(22px,2.4vw,32px)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.78em;letter-spacing:.02em;text-transform:uppercase}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.muted{color:var(--text-muted)}
+
+.container{max-width:var(--maxw);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+
+/* ============== NAV ============== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:18px 0;transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(8,9,12,.72);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border-bottom-color:var(--line)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:18px;letter-spacing:-.01em}
+.logo img{height:30px;width:auto;display:block;filter:brightness(1.1) contrast(1.05)}
+body.light .logo img{filter:invert(1) brightness(.4) contrast(1.2)}
+.nav-links{display:flex;gap:32px;align-items:center;font-size:14.5px}
+.nav-links a{color:var(--text-muted);transition:color .2s;position:relative}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;background:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14.5px;letter-spacing:-.005em;transition:transform .15s,box-shadow .2s,background .2s,border-color .2s;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--accent);color:#06121a;box-shadow:0 0 0 1px rgba(0,212,255,.2),0 8px 24px -8px rgba(0,212,255,.5)}
+.btn-primary:hover{background:#33dfff;box-shadow:0 0 0 1px rgba(0,212,255,.3),0 12px 32px -6px rgba(0,212,255,.7)}
+.btn-ghost{border:1px solid var(--line-strong);color:var(--text);background:rgba(255,255,255,.02)}
+.btn-ghost:hover{border-color:var(--text);background:rgba(255,255,255,.05)}
+.btn-lg{padding:15px 24px;font-size:15.5px;border-radius:10px}
+.nav-mobile-toggle{display:none}
+
+/* ============== HERO ============== */
+.hero{position:relative;min-height:100vh;padding:140px 0 80px;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;mix-blend-mode:luminosity}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,9,12,.4) 0%,rgba(8,9,12,.7) 50%,var(--bg) 100%),radial-gradient(ellipse 60% 40% at 30% 30%,transparent 0%,rgba(8,9,12,.6) 80%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 90% 70% at 50% 40%,#000 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 40%,#000 30%,transparent 80%);z-index:2}
+.hero-orb{position:absolute;width:1200px;height:1200px;left:50%;top:55%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,144,255,.18) 0%,rgba(0,212,255,.08) 25%,transparent 60%);filter:blur(20px);pointer-events:none}
+.hero-orb-2{position:absolute;width:520px;height:520px;right:-100px;top:30%;background:radial-gradient(circle,rgba(255,122,61,.08) 0%,transparent 60%);filter:blur(30px);pointer-events:none}
+.hero-scanline{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.4;animation:scan 8s linear infinite}
+@keyframes scan{0%{top:0}100%{top:100%}}
+.hero-content{position:relative;z-index:2;width:100%}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid var(--line-strong);border-radius:100px;background:rgba(255,255,255,.02);backdrop-filter:blur(8px);margin-bottom:32px;font-size:12px;white-space:nowrap;max-width:100%;overflow:hidden}
+.hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+.hero h1{margin-bottom:28px;max-width:14ch;text-wrap:balance}
+.hero h1 .accent-text{color:var(--accent);font-style:italic;font-weight:500}
+.hero-sub{font-size:clamp(17px,1.5vw,21px);max-width:60ch;color:var(--text-muted);margin-bottom:48px;line-height:1.5}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:80px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:760px;padding-top:32px;border-top:1px solid var(--line)}
+.hero-stat .num{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3vw,40px);font-weight:600;letter-spacing:-.02em;color:var(--text)}
+.hero-stat .num .unit{color:var(--accent);font-weight:500}
+.hero-stat .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);margin-top:4px}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint);display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2}
+.hero-scroll::after{content:"";width:1px;height:32px;background:linear-gradient(180deg,var(--accent),transparent);animation:scrollPulse 2s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
+
+/* ============== 3D MODEL SECTION ============== */
+.model3d{position:relative;background:#040508;border-bottom:1px solid var(--line)}
+.model3d-stage{position:relative;height:100vh;width:100%;overflow:hidden}
+.model3d-stage canvas{position:absolute;top:0;bottom:0;left:38%;right:0;width:62%;height:100%;display:block;z-index:1}
+.model3d-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,#000,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,#000,transparent 80%);z-index:2;pointer-events:none}
+.model3d-overlay{position:absolute;left:8vw;top:50%;transform:translateY(-50%);max-width:480px;z-index:3;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(4,5,8,.55);border:1px solid var(--line-strong);border-radius:14px;padding:32px;pointer-events:none}
+.model3d-overlay h2{margin-bottom:18px;font-size:clamp(34px,4vw,56px)}
+.model3d-overlay p{color:var(--text-muted);font-size:16px;line-height:1.55;margin:0 0 24px;max-width:42ch}
+.model3d-hint{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--accent)}
+@media (max-width:980px){.model3d-overlay{left:4vw;right:4vw;max-width:none;background:rgba(4,5,8,.75)}.model3d-stage canvas{left:0;width:100%;opacity:.4}}
+
+/* ============== PINNED SCROLL SHOWCASE ============== */
+.showcase{position:relative;background:var(--bg)}
+.showcase-stage{position:relative;height:100vh;display:flex;align-items:center;overflow:hidden;will-change:transform}
+.showcase-stage::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(0,144,255,.06),transparent 70%);pointer-events:none}
+.showcase-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:80px 80px;opacity:.5}
+.showcase-track{position:relative;width:100%;height:100vh;display:flex;align-items:center;justify-content:center}
+.showcase-panel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;will-change:transform,opacity}
+.panel-inner{display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:center;width:100%;max-width:var(--maxw);padding:0 var(--pad)}
+.panel-text .num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);letter-spacing:.18em;margin-bottom:16px}
+.panel-text h2{margin-bottom:24px;font-size:clamp(40px,5.5vw,80px)}
+.panel-text p{font-size:clamp(16px,1.4vw,19px);color:var(--text-muted);max-width:48ch;margin-bottom:24px;line-height:1.55}
+.panel-text ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px}
+.panel-text li{display:flex;align-items:flex-start;gap:12px;font-size:15px;color:var(--text)}
+.panel-text li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border:1px solid var(--accent);border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--accent) 30%,transparent 32%)}
+.panel-vis{position:relative;aspect-ratio:4/3;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:linear-gradient(140deg,#0c1119 0%,#000 100%);box-shadow:0 40px 80px -30px rgba(0,0,0,.7),0 0 0 1px var(--line)}
+.panel-vis img.product{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:8%;z-index:1}
+.panel-vis video.product{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.panel-vis .product-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 60%,rgba(255,122,61,.18),transparent 60%);z-index:0;pointer-events:none}
+.panel-vis::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,.05),transparent 50%);pointer-events:none}
+.panel-vis .corner{position:absolute;width:20px;height:20px;border:1px solid var(--accent)}
+.panel-vis .corner.tl{top:12px;left:12px;border-right:0;border-bottom:0}
+.panel-vis .corner.tr{top:12px;right:12px;border-left:0;border-bottom:0}
+.panel-vis .corner.bl{bottom:12px;left:12px;border-right:0;border-top:0}
+.panel-vis .corner.br{bottom:12px;right:12px;border-left:0;border-top:0}
+.panel-vis .label{position:absolute;top:18px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--text-faint)}
+.showcase-progress{position:absolute;left:var(--pad);bottom:48px;display:flex;gap:6px;z-index:5}
+.showcase-progress span{width:48px;height:2px;background:var(--line-strong);border-radius:1px;overflow:hidden;position:relative}
+.showcase-progress span::after{content:"";position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.showcase-progress span.active::after{transform:scaleX(1)}
+
+/* SVG visuals inside panels */
+.panel-vis svg{position:absolute;inset:0;width:100%;height:100%}
+
+/* ============== SECTION HEADER ============== */
+.sh{padding:96px 0 56px}
+.sh-eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.sh-eyebrow::before{content:"";width:32px;height:1px;background:var(--accent)}
+.sh-row{display:grid;grid-template-columns:1.2fr 1fr;gap:80px;align-items:end}
+.sh h2{max-width:18ch;text-wrap:balance}
+.sh-blurb{color:var(--text-muted);font-size:18px;max-width:46ch;padding-bottom:8px}
+
+/* ============== PRODUCTS ============== */
+.products{padding:24px 0 120px;border-bottom:1px solid var(--line)}
+.products-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.pcard{grid-column:span 2;position:relative;padding:32px;background:var(--bg-card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;min-height:340px;transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,background .3s;overflow:hidden;cursor:pointer}
+.pcard:nth-child(4),.pcard:nth-child(5){grid-column:span 3}
+.pcard::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 80% 100% at 50% 0%,rgba(0,212,255,.08),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+.pcard:hover{transform:translateY(-4px);border-color:var(--line-strong);background:#161b25}
+.pcard:hover::before{opacity:1}
+.pcard:hover .pcard-icon{transform:scale(1.05);border-color:var(--accent)}
+.pcard:hover .pcard-arrow{transform:translate(4px,-4px);color:var(--accent)}
+.pcard-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-faint);letter-spacing:.15em;margin-bottom:auto}
+.pcard-icon{width:64px;height:64px;border:1px solid var(--line-strong);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--accent);margin-bottom:24px;transition:transform .3s,border-color .3s;background:rgba(0,212,255,.04)}
+.pcard h3{font-size:24px;margin-bottom:10px;letter-spacing:-.02em}
+.pcard p{color:var(--text-muted);font-size:15px;line-height:1.5;margin:0 0 24px;flex:1}
+.pcard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.pcard-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;padding:4px 8px;border:1px solid var(--line);border-radius:4px;color:var(--text-muted)}
+.pcard-foot{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--line)}
+.pcard-link{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500;color:var(--text)}
+.pcard-arrow{color:var(--text-muted);transition:transform .3s,color .3s;font-family:'JetBrains Mono',monospace}
+
+/* ============== USP / WHY ============== */
+.why{padding:120px 0;background:linear-gradient(180deg,var(--bg) 0%,#06080c 100%);border-bottom:1px solid var(--line)}
+.why-row{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:48px}
+.why-cell{background:var(--bg);padding:48px;display:flex;flex-direction:column;gap:18px;min-height:280px;position:relative;transition:background .3s}
+.why-cell:hover{background:var(--bg-card)}
+.why-cell-num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--accent)}
+.why-cell h3{font-size:28px}
+.why-cell p{color:var(--text-muted);font-size:16px;margin:0;line-height:1.55;max-width:46ch}
+.why-cell-icon{width:44px;height:44px;border:1px solid var(--line-strong);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--accent);background:rgba(0,212,255,.04)}
+
+/* ============== PROCESS TIMELINE ============== */
+.process{padding:120px 0;position:relative;border-bottom:1px solid var(--line)}
+.process-track{position:relative;margin-top:64px}
+.process-line-svg{position:absolute;left:0;right:0;top:46px;height:2px;width:100%;overflow:visible;pointer-events:none}
+.process-line-svg path{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:1200;stroke-dashoffset:1200}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;position:relative;z-index:2}
+.pstep{display:flex;flex-direction:column;gap:16px}
+.pstep-dot{width:96px;height:96px;border-radius:50%;border:1px solid var(--line);background:var(--bg);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:500;color:var(--text-faint);transition:all .4s;position:relative}
+.pstep-dot::before{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid transparent;transition:border-color .4s}
+.pstep.active .pstep-dot{color:var(--accent);border-color:var(--accent);background:#0a1216;box-shadow:0 0 0 6px rgba(0,212,255,.06),inset 0 0 30px rgba(0,212,255,.1)}
+.pstep.active .pstep-dot::before{border-color:rgba(0,212,255,.3)}
+.pstep-mono{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--text-faint)}
+.pstep h3{font-size:22px}
+.pstep p{font-size:15px;color:var(--text-muted);line-height:1.5;margin:0;max-width:30ch}
+
+/* ============== CTA ============== */
+.cta{padding:140px 0;background:radial-gradient(ellipse 100% 100% at 50% 0%,#0d1626 0%,var(--bg) 70%);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.cta-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 60% 80% at 50% 50%,#000,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 60% 80% at 50% 50%,#000,transparent 70%)}
+.cta-inner{position:relative;text-align:center;max-width:840px;margin:0 auto}
+.cta h2{margin-bottom:24px;text-wrap:balance}
+.cta p{color:var(--text-muted);font-size:19px;margin:0 auto 40px;max-width:54ch}
+.cta-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* ============== FOOTER ============== */
+.footer{padding:80px 0 40px;background:#06080b}
+.footer-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid var(--line)}
+.footer-col h4{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;color:var(--text-faint);margin-bottom:18px}
+.footer-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-size:14.5px;color:var(--text-muted)}
+.footer-col li a:hover{color:var(--text)}
+.footer-brand{max-width:36ch;font-size:14.5px;color:var(--text-muted);margin-top:18px;line-height:1.6}
+.footer-bot{padding-top:32px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-faint);letter-spacing:.05em}
+
+/* ============== TWEAKS PANEL ============== */
+.tweaks{position:fixed;right:20px;bottom:20px;width:300px;background:rgba(15,17,23,.92);backdrop-filter:blur(16px);border:1px solid var(--line-strong);border-radius:14px;padding:18px;z-index:100;display:none;box-shadow:0 30px 60px -20px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04)}
+.tweaks.open{display:block}
+.tweaks-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.tweaks-head h4{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500;margin:0}
+.tweaks-close{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background .2s,color .2s}
+.tweaks-close:hover{background:var(--line);color:var(--text)}
+.tweak-row{margin-bottom:14px}
+.tweak-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);margin-bottom:8px;display:block}
+.tweak-swatches{display:flex;gap:8px}
+.swatch{width:32px;height:32px;border-radius:8px;border:2px solid transparent;cursor:pointer;transition:transform .15s,border-color .2s;position:relative}
+.swatch:hover{transform:scale(1.08)}
+.swatch.active{border-color:#fff}
+.tweak-seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:3px;gap:2px}
+.tweak-seg button{flex:1;padding:6px 8px;border-radius:5px;font-size:12px;font-family:'Space Grotesk',sans-serif;color:var(--text-muted);transition:background .2s,color .2s}
+.tweak-seg button.active{background:var(--line);color:var(--text)}
+
+/* ============== RESPONSIVE ============== */
+@media (max-width:980px){
+  .nav-links{display:none}
+  .panel-inner{grid-template-columns:1fr;gap:32px}
+  .panel-vis{aspect-ratio:16/10}
+  .products-grid{grid-template-columns:repeat(2,1fr)}
+  .pcard,.pcard:nth-child(4),.pcard:nth-child(5){grid-column:span 1}
+  .why-row{grid-template-columns:1fr}
+  .process-steps{grid-template-columns:1fr 1fr;gap:48px}
+  .process-line-svg{display:none}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .sh-row{grid-template-columns:1fr;gap:24px}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:560px){
+  .products-grid{grid-template-columns:1fr}
+  .process-steps{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+  .hero{padding-top:120px}
+  .hero-ctas{flex-direction:column;align-items:stretch;gap:10px}
+  .hero-ctas .btn{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body data-screen-label="01 Neuraweld Főoldal">
+
+<!-- ============== NAV ============== -->
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="#" aria-label="Neuraweld">
+      <img src="assets/neuraweld-logo.png" alt="Neuraweld" />
+    </a>
+    <div class="nav-links">
+      <a href="#termekek" class="active">Termékek</a>
+      <a href="#megoldas">Megoldások</a>
+      <a href="#folyamat">Folyamat</a>
+      <a href="#rolunk">Rólunk</a>
+      <a href="#kapcsolat">Kapcsolat</a>
+    </div>
+    <a href="#kapcsolat" class="btn btn-primary">
+      Időpontot foglalok
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ============== HERO ============== -->
+<section class="hero" id="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <video class="hero-video" autoplay muted loop playsinline preload="metadata" src="assets/hero-welding.mp4"></video>
+    <div class="hero-grid"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-orb-2"></div>
+    <div class="hero-scanline"></div>
+  </div>
+  <div class="container hero-content">
+    <div class="hero-eyebrow" data-anim="fade-up">
+      <span class="dot"></span>
+      <span class="mono">REVOMATIC ZRT. × INTELLIGENS HEGESZTÉS</span>
+    </div>
+    <h1 data-anim="hero-title">
+      Az automatizálás <span class="accent-text">következő</span> generációja.
+    </h1>
+    <p class="hero-sub" data-anim="fade-up">
+      Robothegesztési cellák, integrált gyártósorok és Kemppi áramforrás-megoldások a magyar ipar számára. Tervezéstől a beüzemelésig — egy partnerrel.
+    </p>
+    <div class="hero-ctas" data-anim="fade-up">
+      <a href="#termekek" class="btn btn-primary btn-lg">Termékeink <span aria-hidden="true">→</span></a>
+      <a href="#kapcsolat" class="btn btn-ghost btn-lg">Időpontot foglalok</a>
+    </div>
+    <div class="hero-stats" data-anim="fade-up">
+      <div class="hero-stat"><div class="num">120<span class="unit">+</span></div><div class="lbl">Befejezett projekt</div></div>
+      <div class="hero-stat"><div class="num">8<span class="unit">év</span></div><div class="lbl">Iparági tapasztalat</div></div>
+      <div class="hero-stat"><div class="num">24<span class="unit">h</span></div><div class="lbl">Válaszidő</div></div>
+      <div class="hero-stat"><div class="num">99<span class="unit">.4%</span></div><div class="lbl">Hegesztési hozam</div></div>
+    </div>
+  </div>
+  <div class="hero-scroll">SCROLL</div>
+</section>
+
+<!-- ============== PINNED SCROLL SHOWCASE ============== -->
+<section class="showcase" id="megoldas">
+    <div class="showcase-stage" id="showcaseStage">
+      <div class="showcase-grid"></div>
+      <div class="showcase-track">
+
+        <div class="showcase-panel" data-panel="0">
+          <div class="panel-inner">
+            <div class="panel-text">
+              <div class="num">// 01 — TERVEZÉS</div>
+              <h2>Célgépek tervezése és gyártása</h2>
+              <p>Teljeskörű kivitelezés tervezéstől a beüzemelésig. Mérnökeink CAD modellből fizikai cellát építenek, az Ön gyártócsarnokának pontos méreteire szabva.</p>
+              <ul>
+                <li>3D CAD koncepciótervek 5 munkanapon belül</li>
+                <li>FEM analízis és anyagválasztás-támogatás</li>
+                <li>Cellatervezés ABB és FANUC robotokkal</li>
+              </ul>
+            </div>
+            <div class="panel-vis">
+              <span class="corner tl"></span><span class="corner tr"></span>
+              <span class="corner bl"></span><span class="corner br"></span>
+              <span class="label">CELL · ROBOT_01 + KEMPPI_AX</span>
+              <div class="product-glow"></div>
+              <img class="product" src="assets/robot-cell.png" alt="Robothegesztő cella" />
+            </div>
+          </div>
+        </div>
+
+        <div class="showcase-panel" data-panel="1">
+          <div class="panel-inner">
+            <div class="panel-text">
+              <div class="num">// 02 — SZIMULÁCIÓ</div>
+              <h2>Kiemelkedő szakmai tudás</h2>
+              <p>Ügyfeleinkkel együttműködve megtaláljuk a legegyszerűbb és legköltséghatékonyabb megoldást. Még a forgács sem repül — a szimulációban már bizonyítjuk a koncepciót.</p>
+              <ul>
+                <li>Offline robotprogramozás RobotStudio / Roboguide</li>
+                <li>Ütközés- és elérhetőség-analízis</li>
+                <li>Ciklusidő-becslés ±3% pontossággal</li>
+              </ul>
+            </div>
+            <div class="panel-vis">
+              <span class="corner tl"></span><span class="corner tr"></span>
+              <span class="corner bl"></span><span class="corner br"></span>
+              <span class="label">SIM · CYCLE_TIME = 47.2s</span>
+              <video class="product" autoplay muted loop playsinline preload="metadata" src="assets/process-vivber.mp4" style="opacity:.85;mix-blend-mode:lighten"></video>
+              <svg style="position:absolute;inset:0;z-index:2;pointer-events:none" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                  <pattern id="dots2" width="14" height="14" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1" fill="rgba(255,255,255,.08)"/>
+                  </pattern>
+                </defs>
+                <rect width="400" height="300" fill="url(#dots2)"/>
+                <!-- waveform -->
+                <polyline fill="none" stroke="rgba(0,212,255,.4)" stroke-width="1.5"
+                  points="40,180 70,160 100,170 130,140 160,150 190,110 220,120 250,90 280,100 310,80 340,100 360,140"/>
+                <polyline fill="none" stroke="rgba(0,212,255,.9)" stroke-width="2" stroke-linejoin="round"
+                  points="40,180 70,180 100,160 130,160 160,130 190,130 220,100 250,100 280,90 310,90 340,120 360,120"/>
+                <!-- axis -->
+                <line x1="40" y1="240" x2="360" y2="240" stroke="rgba(255,255,255,.15)"/>
+                <line x1="40" y1="60" x2="40" y2="240" stroke="rgba(255,255,255,.15)"/>
+                <!-- ticks -->
+                <g font-family="JetBrains Mono" font-size="8" fill="rgba(255,255,255,.4)">
+                  <text x="40" y="258">0s</text>
+                  <text x="120" y="258">10</text>
+                  <text x="200" y="258">20</text>
+                  <text x="280" y="258">30</text>
+                  <text x="350" y="258">40</text>
+                </g>
+                <!-- highlight -->
+                <rect x="180" y="60" width="80" height="180" fill="rgba(0,212,255,.05)" stroke="rgba(0,212,255,.3)" stroke-dasharray="3 2"/>
+                <text x="220" y="50" text-anchor="middle" fill="rgba(0,212,255,.8)" font-family="JetBrains Mono" font-size="9">CRITICAL PATH</text>
+                <!-- dots on data -->
+                <g fill="#00d4ff">
+                  <circle cx="190" cy="130" r="3"/><circle cx="250" cy="100" r="3"/><circle cx="310" cy="90" r="3"/>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="showcase-panel" data-panel="2">
+          <div class="panel-inner">
+            <div class="panel-text">
+              <div class="num">// 03 — INTEGRÁCIÓ</div>
+              <h2>Ipari automatizálás</h2>
+              <p>Gyártósorok, robotcellák és Ipar 4.0 rendszerek tervezése és kivitelezése. PLC-től felhőig — minden réteg integrálva, monitorozva, dokumentálva.</p>
+              <ul>
+                <li>OPC UA / MQTT adatkapu, MES integráció</li>
+                <li>Kemppi AX MIG: TAST, TSI, érintésérzékelés</li>
+                <li>SCADA dashboard valós idejű OEE-vel</li>
+              </ul>
+            </div>
+            <div class="panel-vis">
+              <span class="corner tl"></span><span class="corner tr"></span>
+              <span class="corner bl"></span><span class="corner br"></span>
+              <span class="label">KEMPPI AX · MIG INTEGRATED</span>
+              <div class="product-glow"></div>
+              <img class="product" src="assets/kemppi-ax.png" alt="Kemppi AX áramforrás" style="padding:4%" />
+              <svg style="position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.6" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                  <pattern id="dots3" width="14" height="14" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1" fill="rgba(255,255,255,.08)"/>
+                  </pattern>
+                </defs>
+                <rect width="400" height="300" fill="url(#dots3)"/>
+                <!-- network nodes -->
+                <g stroke="rgba(0,212,255,.4)" stroke-width="1" fill="none">
+                  <line x1="80" y1="80" x2="200" y2="150"/>
+                  <line x1="80" y1="220" x2="200" y2="150"/>
+                  <line x1="200" y1="150" x2="320" y2="80"/>
+                  <line x1="200" y1="150" x2="320" y2="220"/>
+                  <line x1="320" y1="80" x2="320" y2="220"/>
+                  <line x1="80" y1="80" x2="80" y2="220"/>
+                </g>
+                <!-- node boxes -->
+                <g fill="#0a1018" stroke="rgba(0,212,255,.6)" stroke-width="1.2">
+                  <rect x="60" y="60" width="40" height="40" rx="4"/>
+                  <rect x="60" y="200" width="40" height="40" rx="4"/>
+                  <rect x="180" y="130" width="40" height="40" rx="4"/>
+                  <rect x="300" y="60" width="40" height="40" rx="4"/>
+                  <rect x="300" y="200" width="40" height="40" rx="4"/>
+                </g>
+                <!-- node labels -->
+                <g font-family="JetBrains Mono" font-size="7" fill="rgba(0,212,255,.9)" text-anchor="middle">
+                  <text x="80" y="84">PLC</text>
+                  <text x="80" y="224">HMI</text>
+                  <text x="200" y="154">MES</text>
+                  <text x="320" y="84">ROBOT</text>
+                  <text x="320" y="224">KEMPPI</text>
+                </g>
+                <!-- center pulse -->
+                <circle cx="200" cy="150" r="6" fill="#00d4ff"/>
+                <circle cx="200" cy="150" r="14" fill="none" stroke="rgba(0,212,255,.4)"/>
+                <circle cx="200" cy="150" r="22" fill="none" stroke="rgba(0,212,255,.2)"/>
+                <!-- data packet -->
+                <circle cx="240" cy="135" r="2" fill="#fff" opacity=".9"/>
+                <circle cx="140" cy="180" r="2" fill="#fff" opacity=".7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="showcase-progress">
+        <span class="active"></span><span></span><span></span>
+      </div>
+    </div>
+</section>
+
+<!-- ============== 3D MODEL SCROLL SECTION ============== -->
+<section class="model3d" id="model3d">
+  <div class="model3d-stage" id="model3dStage">
+    <canvas id="three-canvas-showcase"></canvas>
+    <div class="model3d-grid"></div>
+    <div class="model3d-overlay">
+      <div class="eyebrow" style="margin-bottom:18px">// A robotcella</div>
+      <h2>Minden szögből. <span style="color:var(--accent);font-style:italic;font-weight:500">Görgessen.</span></h2>
+      <p>Egy komplett, készre szerelt Neuraweld robothegesztő cella — ABB hatastengelyes karral, Kemppi AX MIG áramforrással, integrált huzaltovabbitóval és pozicionálóval.</p>
+      <div class="model3d-hint">GÖRGESS ↓</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PRODUCTS ============== -->
+<section class="products" id="termekek">
+  <div class="container sh">
+    <div class="sh-eyebrow"><span class="mono" style="color:var(--accent)">Termékcsoportok / 05</span></div>
+    <div class="sh-row">
+      <h2>Megoldások az Ön folyamatára szabva.</h2>
+      <p class="sh-blurb">Öt fő termékcsoportunk lefedi a teljes robothegesztési életciklust: integrációtól a szervizig. Válassza ki, ami az Ön gyártósorát viszi előre.</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="products-grid">
+
+      <article class="pcard" data-card>
+        <div class="pcard-num">01 / 05</div>
+        <div class="pcard-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 5V3M12 21v-2M5 12H3M21 12h-2M7.05 7.05L5.64 5.64M18.36 18.36l-1.41-1.41M7.05 16.95l-1.41 1.41M18.36 5.64l-1.41 1.41"/></svg>
+        </div>
+        <h3>Robotintegráció</h3>
+        <p>ABB és FANUC 6-tengelyes robotok integrációja meglévő gyártósorokba. Munkaállomás-tervezés, kommunikáció, telepítés.</p>
+        <div class="pcard-tags"><span class="pcard-tag">ABB</span><span class="pcard-tag">FANUC</span><span class="pcard-tag">PLC</span></div>
+        <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
+      </article>
+
+      <article class="pcard" data-card>
+        <div class="pcard-num">02 / 05</div>
+        <div class="pcard-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <h3>Robothegesztő cellák</h3>
+        <p>Kulcsrakész, biztonságkerítéssel ellátott hegesztőcellák egy- és kétállomásos kivitelben. Pozicionálóval, pajzzsal, elszívással.</p>
+        <div class="pcard-tags"><span class="pcard-tag">CE</span><span class="pcard-tag">SAFETY-PL D</span><span class="pcard-tag">2-ÁLLOMÁS</span></div>
+        <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
+      </article>
+
+      <article class="pcard" data-card>
+        <div class="pcard-num">03 / 05</div>
+        <div class="pcard-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12L9 8l4 4 6-6M19 6h-4M19 6v4"/><path d="M3 21h18"/></svg>
+        </div>
+        <h3>Kemppi áramforrások</h3>
+        <p>Hivatalos magyarországi disztribúció. AX MIG sorozat varratkövetéssel (TAST), érintésérzékeléssel (TSI) és gázáramlás-méréssel.</p>
+        <div class="pcard-tags"><span class="pcard-tag">AX MIG</span><span class="pcard-tag">TAST</span><span class="pcard-tag">TSI</span></div>
+        <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
+      </article>
+
+      <article class="pcard" data-card>
+        <div class="pcard-num">04 / 05</div>
+        <div class="pcard-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/><path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/></svg>
+        </div>
+        <h3>Szimulációs szolgáltatások</h3>
+        <p>Offline programozás és digitális iker a teljes robotcellához. Ütközés- és elérhetőség-analízis, ciklusidő-becslés, vizualizáció — még a vasak megrendelése előtt. Csökkenti a kockázatot, gyorsítja a beüzemelést, és tisztábbá teszi az árajánlatot.</p>
+        <div class="pcard-tags"><span class="pcard-tag">RobotStudio</span><span class="pcard-tag">Roboguide</span><span class="pcard-tag">Process Sim</span><span class="pcard-tag">Digital Twin</span></div>
+        <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
+      </article>
+
+      <article class="pcard" data-card>
+        <div class="pcard-num">05 / 05</div>
+        <div class="pcard-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <h3>Karbantartás &amp; szerviz</h3>
+        <p>Megelőző karbantartás éves szervizszerződéssel és 24/7-es távfelügyelettel. Pótalkatrész-raktár Budapesten, helyszíni reakcióidő 12 órán belül országosan. Üzemeltetők tréningje, programozási támogatás, távoli diagnosztika.</p>
+        <div class="pcard-tags"><span class="pcard-tag">24/7</span><span class="pcard-tag">SLA</span><span class="pcard-tag">REMOTE</span><span class="pcard-tag">SPARES</span></div>
+        <div class="pcard-foot"><span class="pcard-link">Részletek</span><span class="pcard-arrow">↗</span></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============== WHY / USP ============== -->
+<section class="why" id="rolunk">
+  <div class="container sh">
+    <div class="sh-eyebrow"><span class="mono" style="color:var(--accent)">Miért Neuraweld</span></div>
+    <div class="sh-row">
+      <h2>Mérnöki tudás. Magyar minőség. Egy partnerrel.</h2>
+      <p class="sh-blurb">Nem közvetítünk — gyártunk, integrálunk és karbantartunk. A Revomatic Zrt. nyolc éves ipari tapasztalata a hátterünk.</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="why-row">
+      <div class="why-cell" data-anim="fade-up">
+        <div class="why-cell-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6.5L12 2l9 4.5v11L12 22l-9-4.5z"/><path d="M3 6.5L12 11l9-4.5M12 22V11"/></svg></div>
+        <div class="why-cell-num">01</div>
+        <h3>Mérnöki precizitás</h3>
+        <p>CAD-tól PLC-ig, tervezőasztaltól csarnokig — minden lépés saját mérnök kezén. Nincs alvállalkozói lánc, nincs információs lyuk.</p>
+      </div>
+      <div class="why-cell" data-anim="fade-up">
+        <div class="why-cell-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg></div>
+        <div class="why-cell-num">02</div>
+        <h3>Magyar gyártás, lokális támogatás</h3>
+        <p>Túrkevei csarnok, budapesti iroda. Nincs időeltolódás, nincs nyelvi határ. A hibajegy magyarul, magyar mérnökhöz érkezik.</p>
+      </div>
+      <div class="why-cell" data-anim="fade-up">
+        <div class="why-cell-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg></div>
+        <div class="why-cell-num">03</div>
+        <h3>Teljeskörű életciklus</h3>
+        <p>Igényfelméréstől a 10 éves karbantartási szerződésig. Egy felelős partner — minden szakaszban ugyanaz az arc, ugyanaz a műszaki tudás.</p>
+      </div>
+      <div class="why-cell" data-anim="fade-up">
+        <div class="why-cell-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
+        <div class="why-cell-num">04</div>
+        <h3>Pályázat-kompatibilis dokumentáció</h3>
+        <p>GINOP Plusz / DIMOP Plusz feltételekre szabott teljesítményigazolás, részszámlázás, mérföldkő-rendszer. A pályázatírónak nem kell aggódnia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PROCESS TIMELINE ============== -->
+<section class="process" id="folyamat">
+  <div class="container sh">
+    <div class="sh-eyebrow"><span class="mono" style="color:var(--accent)">Hogyan működünk / 04 lépés</span></div>
+    <div class="sh-row">
+      <h2>Az igénytől a kulcsátadásig négy lépésben.</h2>
+      <p class="sh-blurb">Mérföldkő-alapú kivitelezés átlátható ütemtervvel. Minden lépés végén Önnek bemutatott, jóváhagyásra szoruló átadás.</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="process-track">
+      <svg class="process-line-svg" preserveAspectRatio="none" viewBox="0 0 1200 2">
+        <path d="M0 1 L1200 1"/>
+      </svg>
+      <div class="process-steps">
+        <div class="pstep" data-step="0">
+          <div class="pstep-dot">01</div>
+          <div class="pstep-mono">HÉT 0–1</div>
+          <h3>Igényfelmérés</h3>
+          <p>Helyszíni felmérés, jelenlegi folyamat dokumentálása, célok és KPI-k rögzítése. Ingyenes első konzultáció.</p>
+        </div>
+        <div class="pstep" data-step="1">
+          <div class="pstep-dot">02</div>
+          <div class="pstep-mono">HÉT 1–3</div>
+          <h3>Tervezés &amp; szimuláció</h3>
+          <p>3D cellaterv, offline robotprogram, ciklusidő-becslés. A szimulációs videót Ön is megnézheti, mielőtt fémet vágunk.</p>
+        </div>
+        <div class="pstep" data-step="2">
+          <div class="pstep-dot">03</div>
+          <div class="pstep-mono">HÉT 3–9</div>
+          <h3>Robotintegráció</h3>
+          <p>Cellagyártás Túrkevén, robot- és Kemppi-integráció, biztonsági auditok. CE, PL d, gyári FAT teszt.</p>
+        </div>
+        <div class="pstep" data-step="3">
+          <div class="pstep-dot">04</div>
+          <div class="pstep-mono">HÉT 9–10</div>
+          <h3>Kivitelezés &amp; tesztelés</h3>
+          <p>Helyszíni telepítés, üzembe helyezés, kezelőtréning. SAT teszt, dokumentációátadás, szervizszerződés.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CTA ============== -->
+<section class="cta" id="kapcsolat">
+  <div class="cta-grid"></div>
+  <div class="container cta-inner">
+    <div class="eyebrow" style="margin-bottom:24px">// Lépjen kapcsolatba velünk</div>
+    <h2>Kérjen online konzultációt — még ma.</h2>
+    <p>30 perces, kötelezettségmentes beszélgetés egy mérnökkel. Mi felmérjük a folyamatot, Ön kap egy első koncepciót és egy reális idő- és költségkeretet.</p>
+    <div class="cta-buttons">
+      <a href="#" class="btn btn-primary btn-lg">Időpontot foglalok <span aria-hidden="true">→</span></a>
+      <a href="#" class="btn btn-ghost btn-lg">Igényfelmérő kitöltése</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-col">
+        <a class="logo" href="#" aria-label="Neuraweld"><img src="assets/neuraweld-logo.png" alt="Neuraweld" /></a>
+        <p class="footer-brand">A Revomatic Zrt. robothegesztési és ipari automatizálási termékcsaládja. Tervezéstől a 10 éves szervizig.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Termékek</h4>
+        <ul>
+          <li><a href="#">Robotintegráció</a></li>
+          <li><a href="#">Robothegesztő cellák</a></li>
+          <li><a href="#">Kemppi áramforrások</a></li>
+          <li><a href="#">Szimuláció</a></li>
+          <li><a href="#">Szerviz</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Cég</h4>
+        <ul>
+          <li><a href="#">Rólunk</a></li>
+          <li><a href="#">Folyamat</a></li>
+          <li><a href="#">Karrier</a></li>
+          <li><a href="#">Hírek</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Kapcsolat</h4>
+        <ul>
+          <li>Kinizsi utca 49, Túrkeve 5420</li>
+          <li><a href="mailto:hello@neuraweld.hu">hello@neuraweld.hu</a></li>
+          <li><a href="tel:+3612000000">+36 1 200 0000</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <span>© 2026 REVOMATIC ZRT. — NEURAWELD</span>
+      <span>v1.0 / TURKEVE-BUDAPEST</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============== TWEAKS PANEL ============== -->
+<div class="tweaks" id="tweaks">
+  <div class="tweaks-head">
+    <h4>Tweaks</h4>
+    <button class="tweaks-close" id="tweaksClose" aria-label="Close">✕</button>
+  </div>
+  <div class="tweak-row">
+    <span class="tweak-label">Accent szín</span>
+    <div class="tweak-swatches" id="tw-accent">
+      <button class="swatch active" data-accent="cyan" style="background:linear-gradient(135deg,#00d4ff,#0090ff)"></button>
+      <button class="swatch" data-accent="orange" style="background:linear-gradient(135deg,#ff7a3d,#ff4d00)"></button>
+      <button class="swatch" data-accent="green" style="background:linear-gradient(135deg,#00ff9d,#00b86b)"></button>
+      <button class="swatch" data-accent="violet" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)"></button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <span class="tweak-label">Mód</span>
+    <div class="tweak-seg" id="tw-mode">
+      <button class="active" data-mode="dark">Dark</button>
+      <button data-mode="light">Light</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <span class="tweak-label">Animáció intenzitás</span>
+    <div class="tweak-seg" id="tw-anim">
+      <button data-anim-int="subtle">Subtle</button>
+      <button class="active" data-anim-int="normal">Normal</button>
+      <button data-anim-int="dramatic">Dramatic</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <span class="tweak-label">Hero háttér</span>
+    <div class="tweak-seg" id="tw-bg">
+      <button class="active" data-bg="grid">Grid</button>
+      <button data-bg="particles">Particles</button>
+      <button data-bg="solid">Solid</button>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+const canvas = document.getElementById('three-canvas-showcase');
+const stage = document.getElementById('model3dStage');
+if(canvas && stage){
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+  camera.position.set(0, 0, 4.5);
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const key = new THREE.DirectionalLight(0x00d4ff, 1.4); key.position.set(2,3,2); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xff7a3d, 0.5); rim.position.set(-2,1,-2); scene.add(rim);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.4); fill.position.set(0,-2,3); scene.add(fill);
+  let model = null, scrollP = 0;
+  new GLTFLoader().load('assets/model.glb', (gltf) => {
+    model = gltf.scene;
+    const box = new THREE.Box3().setFromObject(model);
+    const c = box.getCenter(new THREE.Vector3()), s = box.getSize(new THREE.Vector3());
+    model.position.sub(c);
+    model.scale.setScalar(7.2 / Math.max(s.x,s.y,s.z));
+    scene.add(model);
+  }, undefined, (err) => console.warn('GLB load failed', err));
+  function resize(){ const r = canvas.getBoundingClientRect(); renderer.setSize(r.width, r.height, false); camera.aspect = r.width / r.height; camera.updateProjectionMatrix(); }
+  resize(); new ResizeObserver(resize).observe(canvas); window.addEventListener('resize', resize);
+  function loop(){ if(model){ const p = scrollP; model.rotation.y = -0.8 + p * 3.6; model.rotation.x = -0.15 + Math.sin(p * Math.PI) * 0.12; model.position.x = 0; model.position.y = -0.1 + Math.sin(p * Math.PI) * 0.15; camera.position.z = 4.0 - p * 0.8; } renderer.render(scene, camera); requestAnimationFrame(loop); }
+  loop();
+  window.__setShowcaseProgress = (p) => { scrollP = p; };
+}
+</script>
+<script>
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "cyan",
+  "mode": "dark",
+  "animInt": "normal",
+  "bg": "grid"
+}/*EDITMODE-END*/;
+
+const ACCENTS = {
+  cyan:   { c:'#00d4ff', c2:'#0090ff', glow:'rgba(0,212,255,.35)' },
+  orange: { c:'#ff7a3d', c2:'#ff4d00', glow:'rgba(255,122,61,.35)' },
+  green:  { c:'#00ff9d', c2:'#00b86b', glow:'rgba(0,255,157,.30)' },
+  violet: { c:'#a78bfa', c2:'#7c3aed', glow:'rgba(167,139,250,.35)' },
+};
+
+let TWEAKS = { ...TWEAK_DEFAULTS };
+
+function applyTweaks(){
+  const a = ACCENTS[TWEAKS.accent] || ACCENTS.cyan;
+  document.documentElement.style.setProperty('--accent', a.c);
+  document.documentElement.style.setProperty('--accent-2', a.c2);
+  document.documentElement.style.setProperty('--accent-glow', `0 0 60px ${a.glow}`);
+  // mode
+  if(TWEAKS.mode === 'light'){
+    document.documentElement.style.setProperty('--bg', '#f4f5f7');
+    document.documentElement.style.setProperty('--bg-elev', '#fff');
+    document.documentElement.style.setProperty('--bg-card', '#fff');
+    document.documentElement.style.setProperty('--text', '#0c1018');
+    document.documentElement.style.setProperty('--text-muted', '#5b6577');
+    document.documentElement.style.setProperty('--text-faint', '#9aa3b3');
+    document.documentElement.style.setProperty('--line', 'rgba(0,0,0,.07)');
+    document.documentElement.style.setProperty('--line-strong', 'rgba(0,0,0,.14)');
+    document.body.classList.add('light');
+  } else {
+    document.documentElement.style.setProperty('--bg', '#08090c');
+    document.documentElement.style.setProperty('--bg-elev', '#0f1117');
+    document.documentElement.style.setProperty('--bg-card', '#13161e');
+    document.documentElement.style.setProperty('--text', '#e8ecf2');
+    document.documentElement.style.setProperty('--text-muted', '#7a8294');
+    document.documentElement.style.setProperty('--text-faint', '#4a5163');
+    document.documentElement.style.setProperty('--line', 'rgba(255,255,255,.07)');
+    document.documentElement.style.setProperty('--line-strong', 'rgba(255,255,255,.14)');
+    document.body.classList.remove('light');
+  }
+  // hero bg
+  document.querySelectorAll('#tw-bg button').forEach(b => b.classList.toggle('active', b.dataset.bg===TWEAKS.bg));
+  document.querySelectorAll('#tw-mode button').forEach(b => b.classList.toggle('active', b.dataset.mode===TWEAKS.mode));
+  document.querySelectorAll('#tw-anim button').forEach(b => b.classList.toggle('active', b.dataset.animInt===TWEAKS.animInt));
+  document.querySelectorAll('#tw-accent button').forEach(b => b.classList.toggle('active', b.dataset.accent===TWEAKS.accent));
+  const grid = document.querySelector('.hero-grid');
+  if(grid) grid.style.opacity = TWEAKS.bg === 'solid' ? 0 : 1;
+  // particles toggle
+  togglePart(TWEAKS.bg === 'particles');
+}
+
+function setTweak(key, val){
+  TWEAKS[key] = val;
+  applyTweaks();
+  try{ window.parent.postMessage({type:'__edit_mode_set_keys', edits:{[key]:val}}, '*'); }catch(e){}
+}
+
+/* tweaks listeners */
+document.getElementById('tw-accent').addEventListener('click', e => {
+  const b = e.target.closest('[data-accent]'); if(b) setTweak('accent', b.dataset.accent);
+});
+document.getElementById('tw-mode').addEventListener('click', e => {
+  const b = e.target.closest('[data-mode]'); if(b) setTweak('mode', b.dataset.mode);
+});
+document.getElementById('tw-anim').addEventListener('click', e => {
+  const b = e.target.closest('[data-anim-int]'); if(b) setTweak('animInt', b.dataset.animInt);
+});
+document.getElementById('tw-bg').addEventListener('click', e => {
+  const b = e.target.closest('[data-bg]'); if(b) setTweak('bg', b.dataset.bg);
+});
+
+/* edit mode protocol */
+window.addEventListener('message', (e) => {
+  if(!e.data) return;
+  if(e.data.type === '__activate_edit_mode') document.getElementById('tweaks').classList.add('open');
+  if(e.data.type === '__deactivate_edit_mode') document.getElementById('tweaks').classList.remove('open');
+});
+document.getElementById('tweaksClose').addEventListener('click', () => {
+  document.getElementById('tweaks').classList.remove('open');
+  try{ window.parent.postMessage({type:'__edit_mode_dismissed'}, '*'); }catch(e){}
+});
+try{ window.parent.postMessage({type:'__edit_mode_available'}, '*'); }catch(e){}
+applyTweaks();
+
+/* ===== Particles (canvas) ===== */
+var partCanvas, partCtx, partRaf, partOn = false, particles = [];
+function togglePart(on){
+  if(on && !partOn){ initPart(); partOn = true; }
+  else if(!on && partOn){ stopPart(); partOn = false; }
+}
+function initPart(){
+  if(!partCanvas){
+    partCanvas = document.createElement('canvas');
+    partCanvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;mix-blend-mode:screen';
+    document.querySelector('.hero-bg').appendChild(partCanvas);
+    partCtx = partCanvas.getContext('2d');
+  }
+  partCanvas.style.display = 'block';
+  resizePart();
+  particles = Array.from({length: 60}, () => ({
+    x: Math.random()*partCanvas.width,
+    y: Math.random()*partCanvas.height,
+    vx: (Math.random()-.5)*.3,
+    vy: (Math.random()-.5)*.3,
+    r: Math.random()*1.4 + .4,
+    a: Math.random()*.5 + .2
+  }));
+  loopPart();
+}
+function resizePart(){
+  if(!partCanvas) return;
+  const r = partCanvas.parentElement.getBoundingClientRect();
+  partCanvas.width = r.width * devicePixelRatio;
+  partCanvas.height = r.height * devicePixelRatio;
+}
+function loopPart(){
+  if(!partOn) return;
+  const a = ACCENTS[TWEAKS.accent] || ACCENTS.cyan;
+  partCtx.clearRect(0,0,partCanvas.width,partCanvas.height);
+  particles.forEach(p => {
+    p.x += p.vx*devicePixelRatio; p.y += p.vy*devicePixelRatio;
+    if(p.x < 0) p.x = partCanvas.width; if(p.x > partCanvas.width) p.x = 0;
+    if(p.y < 0) p.y = partCanvas.height; if(p.y > partCanvas.height) p.y = 0;
+    partCtx.beginPath();
+    partCtx.fillStyle = a.c;
+    partCtx.globalAlpha = p.a;
+    partCtx.arc(p.x, p.y, p.r*devicePixelRatio, 0, Math.PI*2);
+    partCtx.fill();
+  });
+  partCtx.globalAlpha = 1;
+  // connection lines
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+      const d2 = dx*dx + dy*dy;
+      if(d2 < 12000*devicePixelRatio*devicePixelRatio){
+        partCtx.strokeStyle = a.c;
+        partCtx.globalAlpha = (1 - d2/(12000*devicePixelRatio*devicePixelRatio)) * .15;
+        partCtx.beginPath();
+        partCtx.moveTo(particles[i].x, particles[i].y);
+        partCtx.lineTo(particles[j].x, particles[j].y);
+        partCtx.stroke();
+      }
+    }
+  }
+  partCtx.globalAlpha = 1;
+  partRaf = requestAnimationFrame(loopPart);
+}
+function stopPart(){
+  if(partRaf) cancelAnimationFrame(partRaf);
+  if(partCanvas) partCanvas.style.display = 'none';
+}
+window.addEventListener('resize', () => { if(partOn) resizePart(); });
+
+/* ===== Nav scrolled state ===== */
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+onScroll();
+window.addEventListener('scroll', onScroll, {passive:true});
+
+/* ===== GSAP animations ===== */
+gsap.registerPlugin(ScrollTrigger);
+
+/* Hero entry */
+const heroTl = gsap.timeline({defaults:{ease:'power3.out'}});
+heroTl
+  .from('[data-anim="hero-title"]', {y:60, opacity:0, duration:1})
+  .from('.hero-eyebrow', {y:20, opacity:0, duration:.6}, '-=.7')
+  .from('.hero-sub', {y:30, opacity:0, duration:.7}, '-=.5')
+  .from('.hero-ctas .btn', {y:20, opacity:0, duration:.5, stagger:.08}, '-=.4')
+  .from('.hero-stat', {y:20, opacity:0, duration:.5, stagger:.08}, '-=.3')
+  .from('.hero-orb', {scale:.7, opacity:0, duration:1.6, ease:'power2.out'}, 0)
+  .from('.hero-grid', {opacity:0, duration:1}, .2);
+
+/* Hero parallax */
+gsap.to('.hero-grid', {yPercent:30, ease:'none', scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+gsap.to('.hero-orb', {yPercent:-20, scale:1.2, ease:'none', scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+
+/* ===== Pinned showcase ===== */
+const panels = gsap.utils.toArray('.showcase-panel');
+const dots = gsap.utils.toArray('.showcase-progress span');
+// Pre-state
+gsap.set(panels[0], {opacity:1, y:0});
+gsap.set(panels[1], {opacity:0, y:50});
+gsap.set(panels[2], {opacity:0, y:50});
+
+const showcaseTl = gsap.timeline({
+  scrollTrigger:{
+    trigger:'.showcase-stage',
+    start:'top top',
+    end:'+=300%',
+    pin:true,
+    pinSpacing:true,
+    scrub:.8,
+    anticipatePin:1,
+    invalidateOnRefresh:true,
+    onUpdate: (self) => {
+      const p = self.progress;
+      const idx = p < .33 ? 0 : (p < .66 ? 1 : 2);
+      dots.forEach((d,i) => d.classList.toggle('active', i <= idx));
+    }
+  }
+});
+showcaseTl
+  .to(panels[0], {opacity:0, y:-50, duration:1})
+  .to(panels[1], {opacity:1, y:0, duration:1}, '<')
+  .to({}, {duration:.6})
+  .to(panels[1], {opacity:0, y:-50, duration:1})
+  .to(panels[2], {opacity:1, y:0, duration:1}, '<');
+
+/* ===== 3D model scroll pin ===== */
+ScrollTrigger.create({
+  trigger:'#model3dStage',
+  start:'top top',
+  end:'+=200%',
+  pin:true,
+  pinSpacing:true,
+  scrub:.6,
+  anticipatePin:1,
+  invalidateOnRefresh:true,
+  onUpdate: (self) => { window.__setShowcaseProgress(self.progress); }
+});
+
+/* ===== Stagger product cards ===== */
+gsap.from('[data-card]', {
+  y:40, opacity:0, duration:.7, ease:'power3.out', stagger:.12,
+  scrollTrigger:{trigger:'.products-grid', start:'top 80%'}
+});
+
+/* ===== Why cells ===== */
+gsap.from('.why-cell', {
+  y:30, opacity:0, duration:.7, ease:'power3.out', stagger:.1,
+  scrollTrigger:{trigger:'.why-row', start:'top 80%'}
+});
+
+/* ===== Process timeline ===== */
+const linePath = document.querySelector('.process-line-svg path');
+gsap.to(linePath, {
+  strokeDashoffset: 0, duration: 1, ease:'none',
+  scrollTrigger:{trigger:'.process-track', start:'top 70%', end:'bottom 60%', scrub:.5}
+});
+gsap.utils.toArray('.pstep').forEach((step, i) => {
+  ScrollTrigger.create({
+    trigger:'.process-track',
+    start: `top+=${i*40} 60%`,
+    onEnter: () => step.classList.add('active'),
+    onLeaveBack: () => step.classList.remove('active'),
+  });
+});
+
+/* ===== CTA scale ===== */
+gsap.from('.cta-inner', {
+  scale:.96, opacity:0, duration:1, ease:'power3.out',
+  scrollTrigger:{trigger:'.cta', start:'top 75%'}
+});
+
+/* ===== Counter on stats ===== */
+ScrollTrigger.create({
+  trigger:'.hero-stats',
+  start:'top 90%',
+  once:true,
+  onEnter: () => {
+    document.querySelectorAll('.hero-stat .num').forEach(el => {
+      const numNode = el.firstChild;
+      const rawNum = numNode && numNode.nodeType === 3 ? numNode.textContent : el.textContent;
+      const match = rawNum.match(/^(\d+(?:\.\d+)?)/);
+      if(!match) return;
+      const target = parseFloat(match[1]);
+      const unit = el.querySelector('.unit')?.outerHTML || '';
+      const isFloat = match[1].includes('.');
+      let cur = 0;
+      const dur = 1.4;
+      const start = performance.now();
+      function tick(now){
+        const t = Math.min(1, (now-start)/(dur*1000));
+        const eased = 1 - Math.pow(1-t, 3);
+        cur = target*eased;
+        el.innerHTML = (isFloat ? cur.toFixed(1) : Math.round(cur)) + unit;
+        if(t < 1) requestAnimationFrame(tick);
+        else el.innerHTML = match[1] + unit;
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+});
+
+/* ===== Three.js model ===== */
+window.__setShowcaseProgress = () => {};
+/* prefers-reduced-motion */
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  ScrollTrigger.getAll().forEach(t => t.kill());
+  gsap.set('[data-anim],[data-card],.why-cell,.cta-inner', {clearProps:'all'});
+}
+</script>
+</body>
+</html>
